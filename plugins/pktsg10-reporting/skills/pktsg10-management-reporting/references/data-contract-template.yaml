@@ -1,0 +1,43 @@
+schema_version: "1.0"
+contract_id: "pktsg10.<domain>.<source>"
+status: "draft" # draft | approved | deprecated
+owner: "<data-owner>"
+consumer: "<report-owner>"
+purpose: "<quyet-dinh-ma-bao-cao-phuc-vu>"
+source:
+  file_or_url: "<path-or-google-sheet-url>"
+  tab: "<tab-name>"
+  refresh_frequency: "daily|weekly|monthly|manual"
+  freshness_field: "<updated_at-or-period-field>"
+  expected_latency: "<e.g. by 10:00 next day>"
+grain:
+  row_meaning: "<one row represents what>"
+  primary_key: ["<key-1>", "<key-2>"]
+  period_field: "<date-or-month-column>"
+fields:
+  - name: "<column-name>"
+    business_name: "<ten-nghiep-vu>"
+    type: "string|integer|decimal|date|datetime|boolean"
+    required: true
+    allowed_values: []
+    pii: false
+quality_checks:
+  row_count: "> 0"
+  required_fields_not_null: ["<field>"]
+  unique_key: ["<key-1>", "<key-2>"]
+  valid_date_range: "<period rule>"
+  duplicate_policy: "reject|deduplicate|report-only"
+  missing_value_policy: "reject|exclude-and-report|impute-with-approval"
+  stale_data_policy: "warn|block"
+kpis:
+  - metric_id: "<dictionary-id>"
+    source_fields: ["<field-1>", "<field-2>"]
+    owner: "<kpi-owner>"
+    dictionary_version: "<version>"
+approvals:
+  data_owner: "<name/date>"
+  management_owner: "<name/date>"
+change_log:
+  - version: "1.0"
+    date: "YYYY-MM-DD"
+    change: "<what changed>"

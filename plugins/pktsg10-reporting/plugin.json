@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "pktsg10-reporting",
+  "version": "1.1.0",
+  "description": "Pktsg10/FPT Telecom management reporting, KPI analysis, dashboard design, and Excel/Google Sheets workflow."
+}

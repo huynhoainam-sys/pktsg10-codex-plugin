@@ -12,6 +12,7 @@ description: "Quản trị và thiết kế báo cáo cho chi nhánh FPT Telecom
 - Brief chỉ phân tích KPI/kinh doanh/vận hành → ưu tiên nghiệp vụ FPT.
 - Brief chỉ sửa font, màu, bố cục, filter, ảnh, công thức hoặc dashboard → ưu tiên thiết kế và chỉnh sửa Sheet.
 - Brief vừa phân tích vừa trình bày báo cáo → chạy cả hai nhánh.
+- Brief yêu cầu HTML dashboard, Apps Script, realtime từ Google Sheets hoặc web app → thêm nhánh `dashboard-runtime`.
 - Brief có funnel, churn, CSKH, marketing, sales pipeline hoặc KPI framework → thêm skill chuyên môn đúng nút thắt, không nạp tất cả skill.
 
 Route luôn công khai: `Brief → Primary → Supporting → Exit gate`.
@@ -77,6 +78,16 @@ Nếu thiếu connector, mất quyền, lỗi tải/render hoặc live edit khô
 
 Đọc [references/excel-fallback.md](references/excel-fallback.md) khi kích hoạt nhánh này.
 
+### HTML dashboard và Apps Script
+
+Khi người dùng muốn dashboard trực quan từ Google Sheets, chọn đúng một runtime:
+
+- **Sheet-native:** Apps Script bound với sidebar/modal; dữ liệu đi qua `google.script.run`.
+- **Web App:** Apps Script `doGet()` phục vụ HTML; frontend gọi hàm server và polling 30–60 giây.
+- **External HTML:** frontend độc lập gọi endpoint an toàn; chỉ dùng Google Sheets API khi có OAuth/backend phù hợp, không nhúng API key vào HTML công khai.
+
+Không gọi polling là realtime tuyệt đối. Ghi rõ `refresh interval`, `lastUpdated`, trạng thái stale và giới hạn Apps Script. Đọc [references/html-dashboard.md](references/html-dashboard.md) và dùng starter trong `assets/pktsg10-dashboard-starter/` khi brief cần code.
+
 ## 4. Workflow hợp nhất
 
 1. **Brief & source audit:** xác định quyết định, phạm vi, tab, công thức, link, filter, freeze pane và baseline.
@@ -91,6 +102,7 @@ Nếu thiếu connector, mất quyền, lỗi tải/render hoặc live edit khô
 6. **Action plan:** owner, deadline, KPI kỳ vọng, trạng thái, ngưỡng cảnh báo/kill criteria.
 7. **Operating cadence:** xác định nhịp daily/weekly/monthly, agenda, người chủ trì và điều kiện escalation nếu là chu kỳ quản trị.
 8. **Handoff:** trả file/link, thay đổi chính, bằng chứng QA, giả định, hạn chế, lịch refresh và action/decision log.
+9. **Runtime verification:** nếu có dashboard code, kiểm tra endpoint, quyền truy cập, refresh, stale state, lỗi mạng và dữ liệu rỗng trên desktop/mobile.
 
 ## 5. Cổng chất lượng
 
@@ -100,6 +112,7 @@ Nếu thiếu connector, mất quyền, lỗi tải/render hoặc live edit khô
 - `sheet-reloaded`: đã reload và kiểm tra trực quan ở 100%.
 - `actionable-handoff`: mỗi phát hiện có hành động, owner, deadline và KPI.
 - `control-plane-ready`: KPI dictionary, data contract, control rules và action/decision log đã có owner/version.
+- `dashboard-runtime-verified`: dashboard tải được, dữ liệu khớp nguồn, refresh/stale/error state hoạt động và không lộ credential.
 
 Không bàn giao nếu còn P0/P1: sai dữ liệu, mất công thức, link/ảnh chính hỏng, hoặc màn hình chính khó đọc. P2 polish được ghi riêng.
 
@@ -110,11 +123,13 @@ Không bàn giao nếu còn P0/P1: sai dữ liệu, mất công thức, link/ả
 - Báo cáo kết hợp: báo cáo giám đốc + dashboard/Sheet chỉnh sửa được + action log.
 - Kế hoạch: 30–60–90 ngày, lịch tuần, owner, KPI, ngân sách và kill criteria.
 - Điều hành: branch health score, ngưỡng RAG, lịch họp, action log, decision log và escalation map.
+- Dashboard HTML: source mapping, Apps Script/API, HTML/CSS/JS, cách deploy, refresh interval, last updated và checklist bảo mật.
 
 ## Skill routing
 
 - `fpt-branch-telecom-management`: nghiệp vụ chi nhánh và KPI FPT.
 - `report-design-excel-sheets-dashboard`: design system, preset và QA thẩm mỹ.
+- `visualize`: dashboard HTML/visual exploration khi cần prototype hoặc kiểm tra tương tác.
 - `google-drive:google-sheets`: đọc/sửa Sheet live theo range.
 - `spreadsheets`: Excel native.
 - `data-analytics:validate-data`: kiểm thử số liệu và kết luận.
@@ -177,3 +192,6 @@ Mỗi agent trả về bốn phần: `Finding`, `Evidence`, `Decision impact`, `
 - Parallel chỉ dùng cho nhánh độc lập; mọi kết luận cuối phải qua merge gate và kiểm thử lại trên artifact thực tế.
 - Không coi “đã có dashboard” là đã quản trị: phải có nhịp xem, người chịu trách nhiệm và hành động khi chỉ số chuyển vàng/đỏ.
 - KPI mới phải có `metric_id`, version và chủ sở hữu; thay đổi định nghĩa là thay đổi có kiểm soát, không sửa âm thầm giữa các kỳ.
+- Dashboard đọc Sheets phải batch-read dữ liệu, cache khi phù hợp, giảm số lần gọi server và có failure handler; không gọi từng KPI bằng một request riêng.
+- Apps Script Web App phải tách config/credential khỏi HTML, dùng Script Properties hoặc quyền Google phù hợp, và ghi rõ ai có thể xem dữ liệu.
+- “Realtime” mặc định là polling 60 giây hoặc trigger cập nhật cache; chỉ gọi realtime thấp hơn khi đã kiểm tra quota, quyền và chi phí vận hành.

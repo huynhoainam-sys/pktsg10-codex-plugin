@@ -17,7 +17,7 @@ After this repository is pushed to GitHub, install the skill-only package with:
 
 ```powershell
 python $env:USERPROFILE\.codex\skills\.system\skill-installer\scripts\install-skill-from-github.py `
-  --url https://github.com/<OWNER>/<REPO>/tree/main/plugins/pktsg10-reporting/skills/pktsg10-management-reporting
+  --url https://github.com/huynhoainam-sys/pktsg10-codex-plugin/tree/main/plugins/pktsg10-reporting/skills/pktsg10-management-reporting
 ```
 
 Restart Codex or open a new task so the skill catalog reloads.

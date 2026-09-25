@@ -10,6 +10,7 @@ Reusable Pktsg10/FPT Telecom branch-management and spreadsheet-reporting skill f
 - Arial 16/11/10/9 typography, navy/blue/orange/green/yellow/red semantic system, team/status separation, and visual QA.
 - Small-company agent model with data audit, sales, technical, CSKH/churn, marketing, Sheet design, reconciliation, and handoff roles.
 - KPI dictionary, data-contract template, RAG/escalation controls, branch health score, operating cadence, action/decision log, forecast scenarios, and run ledger.
+- HTML/Apps Script dashboard starter with 60-second refresh, CacheService, stale/error states, Chart.js and Pktsg10 visual tokens.
 
 ## Install in Codex from GitHub
 
